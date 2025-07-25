@@ -1,0 +1,44 @@
+# ─── Python ─────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.log
+
+# ─── Virtual Environment ────────────────
+venv/
+env/
+
+# ─── Playwright Recordings ──────────────
+recordings/
+*.webm
+*.mp4
+
+# ─── VSCode ─────────────────────────────
+.vscode/
+*.code-workspace
+
+# ─── Pytest ─────────────────────────────
+.cache/
+.pytest_cache/
+htmlcov/
+
+# ─── System Files ───────────────────────
+.DS_Store
+Thumbs.db
+
+# ─── Test Output ────────────────────────
+*.sqlite
+*.db
+*.json
+*.csv
+*.xlsx
+*.zip
+
+# ─── Coverage ───────────────────────────
+.coverage
+coverage.xml
+*.cover
+*.cov
+coverage/
