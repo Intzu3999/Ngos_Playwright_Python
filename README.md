@@ -52,6 +52,7 @@ Type variables | PascalCase	| T, ResponseType
 2) Screenshot at every page and save, with auto-rename.
 3) Screenshot at FAILED page and save, with auto-rename.
 4) page.wait_for_timeout() default to 2000 (milliseconds)
+5) Payment Method: FPX, Mastercard, Visa
 
 
 ## [PRIORITY 2] test.py (main executable script, like PHP index)
