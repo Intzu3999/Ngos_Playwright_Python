@@ -4,7 +4,7 @@ import os
 
 os.makedirs("recordings", exist_ok=True)
 
-def test_login_journey():
+def test_e2e_npl():
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=False)
         context = browser.new_context(
@@ -14,111 +14,106 @@ def test_login_journey():
         page.goto("https://nget.digipay.my/plans/postpaid/PBH6100266")
         page.wait_for_timeout(2000)
 
-        #YOUR E2E SCRIPT STARTS HERE
+        #Plan/Product Page
         page.wait_for_timeout(2000)
         page.get_by_role("button", name="Proceed").click()
 
+        # Choose Your Next Step page
         page.get_by_text("Get New Number").click()
-        
         page.wait_for_timeout(2000)
         page.locator("#serviceModal").get_by_role("button", name="Proceed").click()
 
+        # select-sim page
         page.wait_for_timeout(2000)
         page.get_by_role("radio").first.check()
-        # page.goto("https://nget.digipay.my/plans/postpaid/select-sim/PBH6100266")
 
+        # device-compatible page
         page.wait_for_timeout(2000)
-        # page.goto("https://nget.digipay.my/plans/postpaid/device-compatible/PBH6100266")
         page.get_by_role("checkbox", name="I confirm that my device is").check()
         page.wait_for_timeout(2000)
         page.locator("form").click()
         page.get_by_role("button", name="Proceed").click()
 
-
-        # page.goto("https://nget.digipay.my/plans/postpaid/verification/PBH6100266")
+        # ID verification page
         page.wait_for_timeout(2000)
-        page.get_by_role("textbox", name="IC number").click()
 
-        page.wait_for_timeout(2000)
+        # Skip eKYC
         page1 = context.new_page()
         page1.goto("https://nget.digipay.my/plans/postpaid/skipekyc/update/true")
         page.wait_for_timeout(2000)
         page1.close()
 
+        # ID verification page
         page.wait_for_timeout(2000)
         page.get_by_role("textbox", name="IC number").click()
         page.get_by_role("textbox", name="IC number").fill("880725010002")
-
         page.wait_for_timeout(2000)
         page.get_by_role("checkbox", name="I agree to the  Terms and").check()
 
-
-        print("perform recaptcha, 20seconds")
+        # Quickly perform recaptcha! 20seconds!
         page.wait_for_timeout(20000)
 
         page.wait_for_timeout(2000)
         page.get_by_role("button", name="Check Eligibility").click()
 
         page.wait_for_timeout(2000)
-        # page.goto("https://nget.digipay.my/plans/postpaid/select-number/PBH6100266")
-        # expect(page.locator("h5")).to_match_aria_snapshot("- heading \"Number Selection\" [level=5]")
-        # expect(page.locator("#select-number-sec")).to_match_aria_snapshot("- heading \"Select new number\" [level=2]")
         
+        # Select new number page
         page.wait_for_timeout(2000)
         page.get_by_role("textbox", name="Search a mobile number (Enter").click()
-        
         page.wait_for_timeout(2000)
+
+        # Do a loop here to keep retry with random four number
         page.get_by_role("textbox", name="Search a mobile number (Enter").fill("6754")
         page.get_by_role("textbox", name="Search a mobile number (Enter").press("Enter")
-
         page.wait_for_timeout(10000)
         page.get_by_role("button", name="Proceed").click()
 
+        # Select new Supplementary number page
         # expect(page.locator("h5")).to_match_aria_snapshot("- heading \"Supplementary Line\" [level=5]")
         # expect(page.locator("body")).to_match_aria_snapshot("- heading \"Add Supplementary Line(s)\" [level=3]")
-        page.wait_for_timeout(2000)
+        page.wait_for_timeout(1000)
         page.get_by_role("navigation").locator("div").first.click()
-
-        page.wait_for_timeout(2000)
+        page.wait_for_timeout(1000)
         page.get_by_role("button", name="Proceed").click()
 
-        # expect(page.locator("h5")).to_match_aria_snapshot("- heading \"Your Selection\" [level=5]")
-        # expect(page.locator("#plan-review-cart")).to_match_aria_snapshot("- heading \"Review Your Selection\" [level=2]")
-        
-        page.wait_for_timeout(2000)
+        # Your Selection page        
+        page.wait_for_timeout(1000)
         page.get_by_role("button", name="Proceed").click()
         
-        # expect(page.locator("body")).to_match_aria_snapshot("- heading \"Check Out Details\" [level=5]")
-        # expect(page.locator("body")).to_match_aria_snapshot("- heading \"Your Details\" [level=5]")
-        
-        page.wait_for_timeout(2000)
+        # expect(page.locator("body")).to_match_aria_snapshot("- heading \"Check Out Details\" [level=5]")        
+        page.wait_for_timeout(1000)
         page.get_by_role("textbox", name="Full Name").click()
         
-        page.wait_for_timeout(2000)
+        page.wait_for_timeout(1000)
         page.get_by_role("textbox", name="Full Name").fill("EVELYN NPLSTG")
 
-        page.wait_for_timeout(2000)
+        page.wait_for_timeout(1000)
         page.get_by_role("textbox", name="Contact Number").click()
         
-        page.wait_for_timeout(2000)
+        page.wait_for_timeout(1000)
         page.get_by_role("textbox", name="Contact Number").fill("601139221663")
 
-        page.wait_for_timeout(2000)
+        page.wait_for_timeout(1000)
         page.get_by_role("textbox", name="Email Address").click()
 
-        page.wait_for_timeout(2000)
+        page.wait_for_timeout(1000)
         page.get_by_role("textbox", name="Email Address").fill("eve.keoy@infrontconsulting.com.my")
 
         # expect(page.locator("body")).to_match_aria_snapshot("- heading \"Address Details\" [level=5]")
-        page.wait_for_timeout(2000)
+        page.wait_for_timeout(1000)
         page.get_by_role("textbox", name="Address Line 1").click()
         page.get_by_role("textbox", name="Address Line 1").fill("16, Jalan Kerja Air Lama Satu,")
 
-        page.wait_for_timeout(2000)
+        page.wait_for_timeout(1000)
         page.get_by_role("textbox", name="Address Line 2").click()
         page.get_by_role("textbox", name="Address Line 2").fill("Taman Shuet Liang")
 
-        page.wait_for_timeout(2000)
+        page.wait_for_timeout(1000)
+        page.get_by_role("textbox", name="Address Line 3").click()
+        page.get_by_role("textbox", name="Address Line 3").fill("Topeng Kembar")
+
+        page.wait_for_timeout(1000)
         page.locator(".col-lg-7").click()
         page.get_by_role("textbox", name="Postcode").click()
         page.get_by_role("textbox", name="Postcode").fill("68000")
@@ -176,3 +171,5 @@ def test_login_journey():
         context.close()
         browser.close()
 
+if __name__ == "__main__":
+    test_e2e_npl()

@@ -34,6 +34,8 @@ Type variables | PascalCase	| T, ResponseType
 3) Start Python's virtual env: venv\Scripts\activate
 4) python.exe -m pip install --upgrade pip
 5) pip install -r requirements.txt
+6) playwright install
+
 6) to end venv environment: deactivate
 7) to run playwright/test, refer instructions below.
 
