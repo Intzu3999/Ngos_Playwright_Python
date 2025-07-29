@@ -1,11 +1,5 @@
-import pytest
 from playwright.sync_api import sync_playwright
-import os
-from datetime import datetime
-import random
-
-def generate_random_four_digit():
-    return str(random.randint(1000, 9999))
+from helper.helper import generate_random_four_digit
 
 def npl_select_principal_msisdn(page, max_retries: int = 10): 
     for attempt in range(max_retries):

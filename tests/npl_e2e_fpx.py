@@ -4,6 +4,7 @@ from helper.initiation_pages import check_device_compatibility_link, choose_your
 from helper.identity_verification import enter_new_nric, terms_and_conditions_link_and_checkbox
 from helper.ekyc import skip_ekyc
 from helper.npl_add_principal_number import npl_select_principal_msisdn
+from helper.npl_add_supplementary_number import npl_select_supplementary_msisdn
 from helper.transaction_summary import complete_payment 
 
 import os
