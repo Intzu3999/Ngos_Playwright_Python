@@ -7,7 +7,7 @@ def run():
         browser = p.chromium.launch(headless=False)
         page = browser.new_page()
         page.goto("https://nget.digipay.my/plans/postpaid/PBH6100266")
-        page.wait_for_timeout(400)
+        page.wait_for_timeout(1000)
         browser.close()
 
 if __name__ == "__main__":

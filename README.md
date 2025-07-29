@@ -25,7 +25,7 @@ Type variables | PascalCase	| T, ResponseType
 
 - PEP 8 Official Guide https://peps.python.org/pep-0008/
 - Python Documentation https://docs.python.org/3/tutorial/classes.html#private-variables 
-- Playwright Documentation
+- Playwright Documentation https://playwright.dev/python/docs/api/class-playwright
 
 
 ## TO SETUP
