@@ -1,7 +1,7 @@
 import pytest
 from playwright.sync_api import sync_playwright
 from dotenv import load_dotenv
-from helper.helper import complete_payment, choose_next_step, choose_sim_type, skip_ekyc
+from helper.helper import complete_payment, choose_next_step, choose_sim_type, skip_ekyc, enter_new_nric, npl_select_principal_msisdn
 import os
 
 load_dotenv()
@@ -16,14 +16,13 @@ def test_e2e_npl():
         )
         page = context.new_page()
         page.goto("https://nget.digipay.my/plans/postpaid/PBH6100266")
-        page.wait_for_timeout(400)
 
         #Plan/Product Page
         page.wait_for_timeout(400)
         page.get_by_role("button", name="Proceed").click()
 
         # Choose Your Next Step page
-        choose_next_step(page, "cop")
+        choose_next_step(page, "npl")
 
         # select-sim page
         choose_sim_type(page, "esim")
@@ -35,31 +34,19 @@ def test_e2e_npl():
         page.locator("form").click()
         page.get_by_role("button", name="Proceed").click()
 
-        # ID verification page
-        page.wait_for_timeout(400)
-
-        # Skip eKYC
-        # skip_ekyc(page)
-        page1 = context.new_page()
-        page1.goto("https://nget.digipay.my/plans/postpaid/skipekyc/update/true")
-        page.wait_for_timeout(400)
-        page1.close()
+        skip_ekyc(context, page)
 
         # ID verification page
-        page.wait_for_timeout(400)
-        page.get_by_role("textbox", name="IC number").click()
-        page.get_by_role("textbox", name="IC number").fill("880729010002")
-        page.wait_for_timeout(400)
-        page.get_by_role("checkbox", name="I agree to the  Terms and").check()
+        enter_new_nric(page)
 
         # Quickly perform recaptcha! 29seconds!
+        #skip_recaptcha(page)
         page.wait_for_timeout(29000)
-
-        page.wait_for_timeout(400)
         page.get_by_role("button", name="Check Eligibility").click()
-
-        page.wait_for_timeout(400)
         
+        
+        npl_select_principal_msisdn(page, max_retries=10)
+
         # Select new number page
         page.wait_for_timeout(400)
         page.get_by_role("textbox", name="Search a mobile number (Enter").click()
@@ -70,6 +57,8 @@ def test_e2e_npl():
         page.get_by_role("textbox", name="Search a mobile number (Enter").press("Enter")
         page.wait_for_timeout(10000)
         page.get_by_role("button", name="Proceed").click()
+
+
 
         # Select new Supplementary number page
         # expect(page.locator("h5")).to_match_aria_snapshot("- heading \"Supplementary Line\" [level=5]")
