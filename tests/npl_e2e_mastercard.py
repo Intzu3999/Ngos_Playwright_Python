@@ -1,9 +1,16 @@
-import pytest
 from playwright.sync_api import sync_playwright
 from dotenv import load_dotenv
+from helper.initiation_pages import check_device_compatibility_link, choose_your_next_step, choose_sim_type, esim_compatible_checkbox
+from helper.identity_verification import enter_new_nric, terms_and_conditions_link_and_checkbox
+from helper.ekyc import skip_ekyc
+from helper.npl_add_principal_number import npl_select_principal_msisdn
+from helper.npl_add_supplementary_number import npl_select_supplementary_msisdn
+from helper.transaction_summary import complete_payment 
+
 import os
 
 load_dotenv()
+
 os.makedirs("recordings", exist_ok=True)
 
 def test_e2e_npl():
@@ -13,63 +20,35 @@ def test_e2e_npl():
             record_video_dir="recordings/",
         )
         page = context.new_page()
-        page.goto("https://nget.digipay.my/plans/postpaid/PBH6100266")
-        page.wait_for_timeout(1000)
-
+       
         #Plan/Product Page
-        page.wait_for_timeout(1000)
-        page.get_by_role("button", name="Proceed").click()
+        page.goto("https://nget.digipay.my/plans/postpaid/PBH6100266")
+        heading_name = page.get_by_role("heading", name="Order")
+        heading_name.wait_for(state="visible")
 
-        # Choose Your Next Step page
-        page.get_by_text("Get New Number").click()
-        page.wait_for_timeout(1000)
-        page.locator("#serviceModal").get_by_role("button", name="Proceed").click()
+        button = page.get_by_role("button", name="Proceed")
+        button.wait_for(state="visible")
+        button.click()
 
-        # select-sim page
-        page.wait_for_timeout(1000)
-        page.get_by_role("radio").first.check()
+        choose_your_next_step(page, "npl")
 
-        # device-compatible page
-        page.wait_for_timeout(1000)
-        page.get_by_role("checkbox", name="I confirm that my device is").check()
-        page.wait_for_timeout(1000)
-        page.locator("form").click()
-        page.get_by_role("button", name="Proceed").click()
+        choose_sim_type(page, "esim")
 
-        # ID verification page
-        page.wait_for_timeout(1000)
+        check_device_compatibility_link(page)
 
-        # Skip eKYC
-        page1 = context.new_page()
-        page1.goto("https://nget.digipay.my/plans/postpaid/skipekyc/update/true")
-        page.wait_for_timeout(1000)
-        page1.close()
+        esim_compatible_checkbox(page)
 
-        # ID verification page
-        page.wait_for_timeout(1000)
-        page.get_by_role("textbox", name="IC number").click()
-        page.get_by_role("textbox", name="IC number").fill("880725010002")
-        page.wait_for_timeout(1000)
-        page.get_by_role("checkbox", name="I agree to the  Terms and").check()
+        skip_ekyc(context, page)
 
-        # Quickly perform recaptcha! 29seconds!
+        enter_new_nric(context,page)
+
+        terms_and_conditions_link_and_checkbox(page)
+
+        #skip_recaptcha(page)
         page.wait_for_timeout(29000)
-
-        page.wait_for_timeout(1000)
         page.get_by_role("button", name="Check Eligibility").click()
-
-        page.wait_for_timeout(1000)
         
-        # Select new number page
-        page.wait_for_timeout(1000)
-        page.get_by_role("textbox", name="Search a mobile number (Enter").click()
-        page.wait_for_timeout(1000)
-
-        # Do a loop here to keep retry with random four number
-        page.get_by_role("textbox", name="Search a mobile number (Enter").fill("6754")
-        page.get_by_role("textbox", name="Search a mobile number (Enter").press("Enter")
-        page.wait_for_timeout(10000)
-        page.get_by_role("button", name="Proceed").click()
+        npl_select_principal_msisdn(page, max_retries=10)
 
         # Select new Supplementary number page
         # expect(page.locator("h5")).to_match_aria_snapshot("- heading \"Supplementary Line\" [level=5]")
@@ -79,11 +58,13 @@ def test_e2e_npl():
         page.wait_for_timeout(1000)
         page.get_by_role("button", name="Proceed").click()
 
-        # Your Selection page        
+
+
+
+        # YOUR SELECTION PAGE        
         page.wait_for_timeout(1000)
         page.get_by_role("button", name="Proceed").click()
         
-        # expect(page.locator("body")).to_match_aria_snapshot("- heading \"Check Out Details\" [level=5]")        
         page.wait_for_timeout(1000)
         page.get_by_role("textbox", name="Full Name").click()
         
@@ -102,7 +83,6 @@ def test_e2e_npl():
         page.wait_for_timeout(1000)
         page.get_by_role("textbox", name="Email Address").fill(os.getenv("GMAIL"))
 
-        # expect(page.locator("body")).to_match_aria_snapshot("- heading \"Address Details\" [level=5]")
         page.wait_for_timeout(1000)
         page.get_by_role("textbox", name="Address Line 1").click()
         page.get_by_role("textbox", name="Address Line 1").fill("16, Jalan Kerja Air Lama Satu,")
@@ -121,55 +101,15 @@ def test_e2e_npl():
         page.get_by_role("textbox", name="Postcode").fill("68000")
 
         page.wait_for_timeout(1000)
-        # expect(page.get_by_label("State")).to_match_aria_snapshot("- combobox \"State\":\n  - option \"Select\" [disabled]\n  - option \"Johor\"\n  - option \"Kedah\"\n  - option \"Kelantan\"\n  - option \"Melaka\"\n  - option \"Negeri Sembilan\"\n  - option \"Pahang\"\n  - option \"Perak\"\n  - option \"Perlis\"\n  - option \"Penang\"\n  - option \"Sabah\"\n  - option \"Sarawak\"\n  - option \"Selangor\" [selected]\n  - option \"Terengganu\"\n  - option \"Kuala Lumpur\"\n  - option \"Labuan\"\n  - option \"Putrajaya\"")
         page.get_by_role("button", name="Next").click()
+
+
 
         # SUMMARY OF TRANSACTION PAGE
-        page.wait_for_timeout(1000)
-        # expect(page.locator("body")).to_match_aria_snapshot("- heading \"Summary of transaction\" [level=2]")
-        page.get_by_text("All of your favourite banks").click()
+        complete_payment(page, "mastercard")
 
-        page.wait_for_timeout(1000)
-        page.get_by_role("link", name="Select bank").click()
+        # 
 
-        page.wait_for_timeout(1000)
-        page.get_by_role("link", name="Maybank2U").click()
-
-        page.wait_for_timeout(1000)
-        page.get_by_role("button", name="Next").click()
-
-        page.wait_for_timeout(1000)
-        page.get_by_role("textbox", name="User Id").click()
-
-        page.wait_for_timeout(1000)
-        # expect(page.get_by_role("form")).to_match_aria_snapshot("- text: Sign in to continue")
-        
-        page.wait_for_timeout(1000)
-        page.get_by_text("User Id Password Sign in").click()
-        
-        page.wait_for_timeout(1000)
-        page.get_by_role("textbox", name="User Id").click()
-        
-        page.wait_for_timeout(1000)
-        page.get_by_role("textbox", name="User Id").fill(os.getenv("M2U_FXP_ID"))
-        
-        page.wait_for_timeout(1000)
-        page.get_by_role("textbox", name="Password").click()
-        
-        page.wait_for_timeout(1000) 
-        page.get_by_role("textbox", name="Password").fill(os.getenv("M2U_FXP_PASSWORD"))
-        
-        page.wait_for_timeout(1000)
-        page.get_by_role("button", name="Sign in").click()
-        
-        page.wait_for_timeout(1000)
-        page.get_by_role("button", name="Confirm").click()
-        
-        # expect(page.locator("body")).to_match_aria_snapshot("- text: Your account has been deducted")
-        page.wait_for_timeout(1000)
-        page.get_by_role("button", name="Continue with Transaction").click()
-
-        # ---------------------
         page.wait_for_timeout(10000)
         context.close()
         browser.close()
