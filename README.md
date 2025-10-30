@@ -4,8 +4,27 @@
 
 
 ## WHAT DOES THIS PROJECT DO
-not clean, not-scalable, not-reuseable, but funcitoning and quick-to-develope E2E test scripts for NGOS projects. 
-Fast to record new automated test scripts, agile, fast adapt, fast execution, fast result, low learning curve.
+Simple, minimal complexity, scalable, and quick-to-develope, Functionsl, UI, E2E test scripts. With reporting, email, and basic (push & daily) CICD to github.
+
+
+## TO SETUP
+1) Install python3.exe x64-bit
+2) At root project create new virtual env: python -m venv venv 
+3) Start Python's virtual env: venv\Scripts\activate
+4) python.exe -m pip install --upgrade pip
+5) pip install -r requirements.txt (or manually install everything)
+6) playwright install
+7) to end venv environment: deactivate
+
+
+## TO RUN TEST
+1) python tests/regression/test_mnp_regression.py
+2) python tests/e2e/test_npl_new.py
+
+
+## PLAYWRIGHT CODE GENERATOR
+1) playwright codegen https://{{url}}
+
 
 ## PYTHON BEST PRACTICE
 Python's Naming Convention (PEP 8) are summarized below:
@@ -28,27 +47,6 @@ Type variables | PascalCase	| T, ResponseType
 - Playwright Documentation https://playwright.dev/python/docs/api/class-playwright
 
 
-## TO SETUP
-1) Install python3.exe x64-bit
-2) At root project create new virtual env: python -m venv venv 
-3) Start Python's virtual env: venv\Scripts\activate
-4) python.exe -m pip install --upgrade pip
-5) pip install -r requirements.txt
-6) playwright install
-
-6) to end venv environment: deactivate
-7) to run playwright/test, refer instructions below.
-
-
-## PLAYWRIGHT CODE GENERATOR
-1) playwright codegen https://nget.digipay.my/plans/postpaid/PBH6100266
-
-
-## TO RUN TEST
-1) python tests/regression/test_mnp_regression.py
-2) python tests/e2e/test_npl_new.py
-
-
 ## [PRIORITY 1] helper.py FUNCTIONS TO DEVELOP... 
 1) Scroll behavior: click and drag, example: start position 25%:25% end position 75%:75%
 2) Screenshot at every page and save, with auto-rename.
@@ -64,7 +62,7 @@ Type variables | PascalCase	| T, ResponseType
 
 
 ## [PRIORITY 3] Questions and Problems to solve
-1) how to launch multiple test scripts/windows parrallelly
+1) how to launch multiple test scripts/windows parrallelly on Python
 2) playwright pytest configuration approach? at conftest?
 3) scale playwright --headless=false to flexi, or 1/4 of window size
 4) video evidence quality is SO BAD now.. can improve quality/size?
