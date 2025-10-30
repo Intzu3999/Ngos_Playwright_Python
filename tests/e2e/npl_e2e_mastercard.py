@@ -1,11 +1,11 @@
 from playwright.sync_api import sync_playwright
 from dotenv import load_dotenv
-from helper.initiation_pages import check_device_compatibility_link, choose_your_next_step, choose_sim_type, esim_compatible_checkbox
-from helper.identity_verification import enter_new_nric, terms_and_conditions_link_and_checkbox
-from helper.ekyc import skip_ekyc
-from helper.npl_add_principal_number import npl_select_principal_msisdn
-from helper.npl_add_supplementary_number import npl_select_supplementary_msisdn
-from helper.transaction_summary import complete_payment 
+from scripts.common import check_device_compatibility_link, choose_sim_type, choose_your_next_step, esim_compatible_checkbox
+from scripts.npl import enter_new_nric, terms_and_conditions_link_and_checkbox
+from scripts.ekyc import skip_ekyc
+from scripts.npl_add_principal_number import npl_select_principal_msisdn
+from scripts.npl_add_supplementary_number import npl_select_supplementary_msisdn
+from scripts.transaction_summary import complete_payment 
 
 import os
 
@@ -106,7 +106,7 @@ def test_e2e_npl():
 
 
         # SUMMARY OF TRANSACTION PAGE
-        complete_payment(page, "fpx")
+        complete_payment(page, "mastercard")
 
         # 
 
